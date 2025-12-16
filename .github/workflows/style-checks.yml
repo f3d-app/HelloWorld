@@ -1,0 +1,27 @@
+on:
+  pull_request_target:
+    types: [assigned, opened, synchronize, reopened, labeled]
+    branches:
+      - master
+      - release
+name: Style Checks
+jobs:
+  #----------------------------------------------------------------------------
+  # Style checks
+  #----------------------------------------------------------------------------
+  style_checks:
+    name: Formatting Check
+    runs-on: ubuntu-latest
+    env:
+      ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
+          fetch-depth: 1
+          lfs: false
+
+      - name: Style checks
+        uses: f3d-app/style-checks-action@main
